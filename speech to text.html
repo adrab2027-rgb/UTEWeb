@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تحويل الكلام إلى نص</title>
+    <link rel="icon" type="image/x-icon" href="photos/logo.png">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    direction: rtl;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 80%;
+    height: 150px;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#start {
+    background: #22c55e;
+    color: white;
+}
+
+#stop {
+    background: #ef4444;
+    color: white;
+}
+#ss{
+    display: inline-block;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #007BFF, #0056D2);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+}
+
+#ss:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.4);
+    background: linear-gradient(135deg, #0A84FF, #0060DF);
+}
+
+#ss:active{
+    transform: scale(0.97);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+#copy {
+    background: #3b82f6;
+    color: white;
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎤Convert speech to text</h1>
+
+    <textarea id="output" placeholder="show here" readonly></textarea>
+
+    <div class="buttons">
+        <button id="start">Start recording</button>
+        <button id="stop">stop</button>
+        <button id="copy">Copy</button>
+    </div>
+
+    <p id="status">الحالة: مستعد</p>
+</div>
+<button><a href="tra.html" id="ss">Transelator</a></button>
+<script>
+    const startBtn = document.getElementById("start");
+const stopBtn = document.getElementById("stop");
+const copyBtn = document.getElementById("copy");
+const output = document.getElementById("output");
+const statusText = document.getElementById("status");
+
+// دعم المتصفح
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (!SpeechRecognition) {
+    alert("المتصفح لا يدعم تحويل الصوت لنص 😢 استخدم Chrome");
+}
+
+const recognition = new SpeechRecognition();
+recognition.lang = "ar-EG"; // عربي
+recognition.continuous = true;
+
+startBtn.onclick = () => {
+    recognition.start();
+    statusText.innerText = "الحالة: جاري الاستماع 🎧";
+};
+
+stopBtn.onclick = () => {
+    recognition.stop();
+    statusText.innerText = "الحالة: تم الإيقاف";
+};
+
+recognition.onresult = (event) => {
+    let transcript = "";
+    for (let i = 0; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript + " ";
+    }
+    output.value = transcript;
+};
+
+// نسخ النص
+copyBtn.onclick = () => {
+    output.select();
+    document.execCommand("copy");
+    statusText.innerText = "تم نسخ النص ✅";
+};
+</script>
+</body>
+</html>

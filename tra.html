@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Translator</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    textarea {
+      width: 400px;
+      height: 120px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #outputText {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #222;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      display: inline-block;
+      min-width: 300px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>🌍 Smart Translator (Arabic ⇄ English)</h2>
+
+  <textarea id="inputText" placeholder="اكتب عربي أو English"></textarea>
+  <br>
+
+  <button onclick="translateText()">Translate</button>
+
+  <div id="outputText">Result will appear here...</div>
+
+  <script>
+    async function translateText() {
+      let text = document.getElementById("inputText").value;
+
+      if (!text) {
+        alert("Please enter text");
+        return;
+      }
+
+      // detect Arabic or English
+      let isArabic = /[\u0600-\u06FF]/.test(text);
+      let langPair = isArabic ? "ar|en" : "en|ar";
+
+      try {
+        let response = await fetch(
+          "https://api.mymemory.translated.net/get?q=" +
+          encodeURIComponent(text) +
+          "&langpair=" + langPair
+        );
+
+        let data = await response.json();
+
+        document.getElementById("outputText").innerText =
+          data.responseData.translatedText;
+
+      } catch (error) {
+        document.getElementById("outputText").innerText =
+          "Error: check internet connection";
+      }
+    }
+  </script>
+
+</body>
+</html>
